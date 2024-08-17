@@ -1,42 +1,49 @@
-import requests, json
+import requests
 import os
+import pycountry
 from django.shortcuts import render
 from dotenv import load_dotenv
 from .forms import LocationForm
 
-
 load_dotenv()
 
-# Create your views here.
 def index(request):
+    # if a user inputs something into the location box
     if request.method == "POST":
         form = LocationForm(request.POST)
+        
         if form.is_valid():
-            location = form.cleaned_data["location"].lower()
-
+            #clean the data
+            input_location = form.cleaned_data["location"].lower()
+            location = api_handler(f"http://api.openweathermap.org/geo/1.0/direct?q={input_location}&limit=1&appid=")
+            
+            country = pycountry.countries.get(alpha_2=location[0]["country"])
+            weather = api_handler(f"https://api.openweathermap.org/data/2.5/weather?lat={location[0]["lat"]}&lon={location[0]["lon"]}&appid=")
+            
+            temperature = round(weather["main"]["temp"] - 273.15)
+            print(temperature)
+            #return the data to the user
             return render(request, "weather/index.html", {
-            "temp": get_api_response(),
-            "form": LocationForm()
+                "temp": temperature,
+                "country": country.name,
+                "form": LocationForm(),
         })
-
         else:
             raise 404
     else:
         return render(request, "weather/index.html", {
-            "temp": get_api_response(),
+            "temp": "Enter City.",
             "form": LocationForm()
         })
 
-def get_api_response():
+def api_handler(url):
     access_key = os.getenv("KEY")
 
-    url = f"https://api.openweathermap.org/data/2.5/weather?lat=44.34&lon=10.99&appid={access_key}"
-
-    
-    """response = requests.get(url)
+    url_key = url+access_key
+    response = requests.get(url_key)
 
     if response.status_code == 200:
         data = response.json()
         return data
     else:
-        return "Failure to get data."""
+        return "Failure to get data."
