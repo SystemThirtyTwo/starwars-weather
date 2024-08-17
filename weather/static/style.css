@@ -1,6 +1,8 @@
 body {
-    background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('/weather/static/tatooine.jpg');
+    background-image: url("/weather/static/tatooine.jpg");
     background-attachment: fixed;
+    object-fit: cover;
+    object-fit: none;
     /*background-position: center;*/
     background-size: 150% 150%;
 }
@@ -11,14 +13,16 @@ body {
 }
 
 .temperature p {
-  font-size: 150px;
+  font-size: 175px;
   font-family: Arial, Helvetica, sans-serif;
+  text-align: center;
   color: white;
   position: absolute;
   top: 100%;
   left: 50%;
   margin-right: -50%;
   transform: translate(-50%, -50%);
+  
 }
 
 /* Add a black background color to the top navigation bar */
@@ -44,13 +48,13 @@ body {
   }
   
   /* Change the color of links on hover */
-  .topnav a:hover {
+.topnav a:hover {
     background-color: #4d4d4d;
     color: black;
-  }
+}
   
   /* Style the "active" element to highlight the current page */
-  .topnav a.active {
+.topnav a.active {
     background-color: #636172;
     color: white;
   }
@@ -65,7 +69,7 @@ body {
     font-size: 17px;
     border-radius: 10px;
   }
-  
+
   /* When the screen is less than 600px wide, stack the links and the search field vertically instead of horizontally */
   @media screen and (max-width: 600px) {
     .topnav a, .topnav input[type=text] {
@@ -78,8 +82,13 @@ body {
     }
     .topnav input[type=text] {
       border: 1px solid #ccc;
+      border-radius: 0px;
     }
-    div.temperature p {
-      top: 35%;
+    .temperature p {
+      top: 100%;
     }
-  }
+    .temperature p {
+      font-size: 100px;
+      outline: 5px #333333;
+    }
+}

@@ -21,18 +21,19 @@ def index(request):
             weather = api_handler(f"https://api.openweathermap.org/data/2.5/weather?lat={location[0]["lat"]}&lon={location[0]["lon"]}&appid=")
             
             temperature = round(weather["main"]["temp"] - 273.15)
-            print(temperature)
+            
             #return the data to the user
             return render(request, "weather/index.html", {
                 "temp": temperature,
                 "country": country.name,
                 "form": LocationForm(),
+                "planet": determine_planet(temperature)
         })
         else:
             raise 404
     else:
         return render(request, "weather/index.html", {
-            "temp": "Enter City.",
+            "temp": None,
             "form": LocationForm()
         })
 
@@ -47,3 +48,15 @@ def api_handler(url):
         return data
     else:
         return "Failure to get data."
+    
+def determine_planet(temperature):
+    if temperature <= 0:
+        return "hoth"
+    elif temperature >= 20:
+        return "endor"
+    elif temperature >= 30:
+        return "batuu"
+    elif temperature >= 45:
+        return "tatooine"
+    else:
+        return "endor"
